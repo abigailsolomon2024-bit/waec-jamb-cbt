@@ -1,32 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Exam Result</title>
 
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<h1>Exam Result</h1>
 
-<h2 id="subject"></h2>
+<div class="result-container">
 
-<h2 id="score"></h2>
-
-<h2 id="percentage"></h2>
-
-<h2 id="status"></h2>
+    <h1>Examination Result</h1>
 
 
-<button onclick="goHome()">
-Back to Home
-</button>
+    <h2 id="subject"></h2>
+
+
+    <div class="result-box">
+
+        <h3>Score</h3>
+
+        <p id="score"></p>
+
+
+        <h3>Percentage</h3>
+
+        <p id="percentage"></p>
+
+
+        <h3>Grade</h3>
+
+        <p id="grade"></p>
+
+
+        <h3>Performance</h3>
+
+        <p id="message"></p>
+
+    </div>
+
+
+
+    <button onclick="retakeExam()">
+        🔄 Retake Exam
+    </button>
+
+
+    <button onclick="goDashboard()">
+        🏠 Back to Dashboard
+    </button>
+
+
+</div>
+
 
 
 <script src="result.js"></script>
 
+
 </body>
+
 </html>
+
 
 

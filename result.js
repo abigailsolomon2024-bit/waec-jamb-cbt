@@ -1,42 +1,113 @@
-let subject = localStorage.getItem("subject");
-
-let score = localStorage.getItem("score");
-
-let total = localStorage.getItem("totalQuestions");
+// =========================
+// LOAD RESULT
+// =========================
 
 
-document.getElementById("subject").innerText =
-"Subject: " + subject;
+const score =
+localStorage.getItem("score");
 
 
-document.getElementById("score").innerText =
-"Score: " + score + "/" + total;
+const total =
+localStorage.getItem("total");
 
 
-let percentage = (score / total) * 100;
+const percentage =
+localStorage.getItem("percentage");
 
 
-document.getElementById("percentage").innerText =
-"Percentage: " + percentage.toFixed(1) + "%";
+const subject =
+localStorage.getItem("subject");
 
 
-if(percentage >= 50){
 
-document.getElementById("status").innerText =
-"Status: PASS";
+document.getElementById("subject").innerHTML =
+subject + " Result";
+
+
+
+document.getElementById("score").innerHTML =
+score + " / " + total;
+
+
+
+document.getElementById("percentage").innerHTML =
+percentage + "%";
+
+
+
+// =========================
+// GRADE SYSTEM
+// =========================
+
+let grade;
+let message;
+
+
+if (percentage >= 80) {
+
+    grade = "A";
+    message = "Excellent Performance 🎉";
 
 }
-else{
 
-document.getElementById("status").innerText =
-"Status: FAIL";
+else if (percentage >= 70) {
+
+    grade = "B";
+    message = "Very Good Performance 👏";
+
+}
+
+else if (percentage >= 60) {
+
+    grade = "C";
+    message = "Good Performance 👍";
+
+}
+
+else if (percentage >= 50) {
+
+    grade = "D";
+    message = "Fair Performance";
+
+}
+
+else {
+
+    grade = "F";
+    message = "Keep Practicing. Try Again.";
 
 }
 
 
 
-function goHome(){
+document.getElementById("grade").innerHTML =
+grade;
 
-window.location.href = "index.html";
+
+document.getElementById("message").innerHTML =
+message;
+
+
+
+// =========================
+// BUTTON FUNCTIONS
+// =========================
+
+
+function retakeExam(){
+
+    localStorage.removeItem("score");
+    localStorage.removeItem("percentage");
+
+    window.location.href="exam.html";
 
 }
+
+
+
+function goDashboard(){
+
+    window.location.href="dashboard.html";
+
+}
+

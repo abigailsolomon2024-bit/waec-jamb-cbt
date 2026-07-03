@@ -1,236 +1,340 @@
-let subject = localStorage.getItem("subject");
+// =========================
+// GET SUBJECT FROM URL
+// =========================
+
+const urlParams = new URLSearchParams(window.location.search);
+
+const subject = urlParams.get("subject") || "english";
+
+
+document.getElementById("subjectName").textContent =
+subject.charAt(0).toUpperCase() + subject.slice(1);
+
+
+// =========================
+// LOAD SUBJECT QUESTIONS
+// =========================
 
 let questions = [];
 
-if(subject === "Mathematics"){
-    questions = mathematicsQuestions;
-}
-else if(subject === "English"){
-    questions = englishQuestions;
-}
-else if(subject === "Biology"){
-    questions = biologyQuestions;
-}
-else if(subject === "Chemistry"){
-    questions = chemistryQuestions;
-}
-else if(subject === "Physics"){
-    questions = physicsQuestions;
-}
-else if(subject === "Government"){
-    questions = governmentQuestions;
-}
-else if(subject === "CRS"){
-    questions = crsQuestions;
-}
-else if(subject === "Literature"){
-    questions = literatureQuestions;
+
+switch(subject){
+
+case "english":
+questions = englishQuestions;
+break;
+
+case "mathematics":
+questions = mathematicsQuestions;
+break;
+
+case "biology":
+questions = biologyQuestions;
+break;
+
+case "physics":
+questions = physicsQuestions;
+break;
+
+case "chemistry":
+questions = chemistryQuestions;
+break;
+
+case "government":
+questions = governmentQuestions;
+break;
+
+case "crs":
+questions = crsQuestions;
+break;
+
+case "literature":
+questions = literatureQuestions;
+break;
+
+default:
+questions = englishQuestions;
+
 }
 
-questions = questions.sort(() => Math.random() - 0.5);
+
+// =========================
+// RANDOMIZE ARRAY FUNCTION
+// =========================
+
+function shuffle(array){
+
+return array.sort(() => Math.random() - 0.5);
+
+}
+
+
+// =========================
+// PREPARE QUESTIONS
+// =========================
+
+// Pick only 40 questions
+
+questions = shuffle([...questions])
+.slice(0,40);
+
+
+// Randomize options
+
+questions = questions.map(q => {
+
+
+let options = [...q.options];
+
+let correctAnswer = q.answer;
+
+
+options = shuffle(options);
+
+
+return {
+
+question:q.question,
+
+options:options,
+
+answer:correctAnswer
+
+};
+
+
+});
+
+
+// =========================
+// VARIABLES
+// =========================
 
 let currentQuestion = 0;
+
 let userAnswers = [];
-let timeLeft = 3600;
 
-document.getElementById("subjectTitle").innerText = subject;
 
-function generateQuestionNumbers(){
+// =========================
+// TIMER SETTINGS
+// =========================
 
-    let numbers = "";
+let timeLeft = 30 * 60;
+// =========================
+// DISPLAY QUESTION
+// =========================
 
-    for(let i = 0; i < questions.length; i++){
+function showQuestion(){
 
-        let className = "";
+let q = questions[currentQuestion];
 
-        if(i === currentQuestion){
+document.getElementById("questionNumber").textContent =
+"Question " + (currentQuestion + 1) + " of " + questions.length;
 
-            className = "current-question";
+
+document.getElementById("questionText").textContent =
+q.question;
+
+
+let optionsHTML = "";
+
+
+q.options.forEach(option => {
+
+optionsHTML += `
+
+<label>
+<input type="radio" name="answer" value="${option}">
+${option}
+</label>
+<br>
+
+`;
+
+});
+
+
+document.getElementById("options").innerHTML = optionsHTML;
+
+
+
+// Restore previously selected answer
+if (userAnswers[currentQuestion]) {
+
+    const radios = document.querySelectorAll('input[name="answer"]');
+
+    radios.forEach(radio => {
+
+        if (radio.value === userAnswers[currentQuestion]) {
+
+            radio.checked = true;
 
         }
-        else if(userAnswers[i]){
 
-            className = "answered-question";
-
-        }
-        else{
-
-            className = "unanswered-question";
-
-        }
-
-        numbers += `
-        <button
-        class="${className}"
-        onclick="goToQuestion(${i})">
-        ${i + 1}
-        </button>
-        `;
-    }
-
-    document.getElementById("questionNumbers").innerHTML = numbers;
-}
-
-function goToQuestion(index){
-
-    currentQuestion = index;
-
-    loadQuestion();
-}
-
-function loadQuestion(){
-
-    let q = questions[currentQuestion];
-
-    document.getElementById("question").innerText =
-    (currentQuestion + 1) + ". " + q.question;
-
-    let optionsHTML = "";
-
-    q.options.forEach((option,index)=>{
-
-        let selected = "";
-
-        if(userAnswers[currentQuestion] === option){
-
-            selected =
-            "style='background:#90caf9;color:black;'";
-        }
-
-        optionsHTML += `
-        <button
-        class="option-btn"
-        ${selected}
-        onclick="checkAnswer(${index})">
-        ${option}
-        </button>
-        <br><br>
-        `;
     });
 
-    document.getElementById("options").innerHTML =
-    optionsHTML;
-
-    generateQuestionNumbers();
+}
 }
 
-function checkAnswer(index){
 
-    userAnswers[currentQuestion] =
-    questions[currentQuestion].options[index];
 
-    loadQuestion();
-}
+// =========================
+// NEXT QUESTION
+// =========================
 
 function nextQuestion(){
 
-    if(currentQuestion < questions.length - 1){
+let selected = document.querySelector(
+'input[name="answer"]:checked'
+);
 
-        currentQuestion++;
 
-        loadQuestion();
-    }
+if(selected){
+
+userAnswers[currentQuestion] = selected.value;
+
 }
 
+
+currentQuestion++;
+
+
+if(currentQuestion < questions.length){
+
+showQuestion();
+
+}else{
+
+submitExam();
+
+}
+}
+// =========================
+// PREVIOUS QUESTION
+// =========================
+
 function previousQuestion(){
+
+    // Save the current selected answer
+    let selected = document.querySelector('input[name="answer"]:checked');
+
+    if(selected){
+
+        userAnswers[currentQuestion] = selected.value;
+
+    }
 
     if(currentQuestion > 0){
 
         currentQuestion--;
 
-        loadQuestion();
+        showQuestion();
+
     }
+
 }
 
-function finishExam(){
-
-    let confirmSubmit =
-    confirm("Are you sure you want to submit your exam?");
-
-    if(!confirmSubmit){
-        return;
-    }
-
-    let score = 0;
-
-    for(let i = 0; i < questions.length; i++){
-
-        if(userAnswers[i] === questions[i].answer){
-
-            score++;
-        }
-    }
-
-    localStorage.setItem("score", score);
-
-    localStorage.setItem(
-        "totalQuestions",
-        questions.length
-    );
-
-    localStorage.setItem(
-        "subject",
-        subject
-    );
-
-    window.location.href = "result.html";
-}
+// =========================
+// START TIMER
+// =========================
 
 function startTimer(){
 
-    let timer =
-    document.getElementById("timer");
+let timer = setInterval(()=>{
 
-    let countdown = setInterval(()=>{
 
-        let minutes =
-        Math.floor(timeLeft / 60);
+let minutes = Math.floor(timeLeft / 60);
 
-        let seconds =
-        timeLeft % 60;
+let seconds = timeLeft % 60;
 
-        timer.innerText =
-        minutes + ":" +
-        seconds.toString().padStart(2,"0");
 
-        timeLeft--;
+document.getElementById("timer").textContent =
+minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 
-        if(timeLeft < 0){
 
-            clearInterval(countdown);
 
-            let score = 0;
+timeLeft--;
 
-            for(let i = 0; i < questions.length; i++){
 
-                if(userAnswers[i] === questions[i].answer){
 
-                    score++;
-                }
-            }
+if(timeLeft < 0){
 
-            localStorage.setItem("score", score);
+clearInterval(timer);
 
-            localStorage.setItem(
-                "totalQuestions",
-                questions.length
-            );
+submitExam();
 
-            localStorage.setItem(
-                "subject",
-                subject
-            );
-
-            window.location.href =
-            "result.html";
-        }
-
-    },1000);
 }
 
-generateQuestionNumbers();
 
-loadQuestion();
+},1000);
+
+
+}
+
+
+
+// =========================
+// SUBMIT EXAM
+// =========================
+
+function submitExam(){
+
+
+let score = 0;
+
+
+questions.forEach((q,index)=>{
+
+
+if(userAnswers[index] === q.answer){
+
+score++;
+
+}
+
+
+});
+
+
+
+localStorage.setItem(
+"score",
+score
+);
+
+
+localStorage.setItem(
+"total",
+questions.length
+);
+
+
+
+window.location.href="result.html";
+
+
+}
+
+// =========================
+// BUTTON EVENTS
+// =========================
+
+document.getElementById("nextBtn").addEventListener("click", nextQuestion);
+
+document.getElementById("prevBtn").addEventListener("click", previousQuestion);
+
+document.getElementById("submitBtn").addEventListener("click", submitExam);
+
+// =========================
+// START EXAM
+// =========================
+
+showQuestion();
 
 startTimer();
+
+
+
+
+
 

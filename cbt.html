@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WAEC/JAMB CBT Examination</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header>
+
+<h2>🎓 WAEC/JAMB CBT</h2>
+
+<div class="exam-info">
+
+<span><strong>Subject:</strong> <span id="subjectName"></span></span>
+
+<span><strong>Time Left:</strong> <span id="timer">30:00</span></span>
+
+</div>
+
+</header>
+
+<div class="cbt-container">
+
+<div class="progress-container">
+
+<div class="progress-bar" id="progressBar"></div>
+
+</div>
+
+<div class="question-box">
+
+<h3 id="questionNumber">
+Question 1 of 40
+</h3>
+
+<h2 id="questionText">
+Loading Question...
+</h2>
+
+<div class="options" id="options">
+
+<label class="option">
+
+<input type="radio" name="answer" value="0">
+
+<span id="optionA"></span>
+
+</label>
+
+<label class="option">
+
+<input type="radio" name="answer" value="1">
+
+<span id="optionB"></span>
+
+</label>
+
+
+
+
+</div>
+
+</div>
+
+<div class="navigation">
+
+<button id="prevBtn">
+⬅️ Previous
+</button>
+
+<button id="nextBtn">
+Next ➡️
+</button>
+
+</div>
+
+<div class="submit-area">
+
+<button id="submitBtn">
+Submit Examination
+</button>
+
+</div>
+
+</div>
+
+<!-- Subject Files -->
+
+<script src="english.js"></script>
+
+<script src="mathematics.js"></script>
+
+<script src="biology.js"></script>
+
+<script src="physics.js"></script>
+
+<script src="chemistry.js"></script>
+
+<script src="government.js"></script>
+
+<script src="crs.js"></script>
+
+<script src="literature.js"></script>
+
+<!-- Main CBT Engine -->
+
+<script src="exam.js"></script>
+
+</body>
+</html>
+
