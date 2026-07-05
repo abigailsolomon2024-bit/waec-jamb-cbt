@@ -12,7 +12,7 @@ localStorage.getItem("total");
 
 
 const percentage =
-localStorage.getItem("percentage");
+parseInt(localStorage.getItem("percentage")) || 0;
 
 
 const subject =

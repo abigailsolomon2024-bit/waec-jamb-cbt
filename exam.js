@@ -296,19 +296,29 @@ score++;
 });
 
 
+const percentage = Math.round(
+(score / questions.length) * 100
+);
 
 localStorage.setItem(
 "score",
 score
 );
 
-
 localStorage.setItem(
 "total",
 questions.length
 );
 
+localStorage.setItem(
+"percentage",
+percentage
+);
 
+localStorage.setItem(
+"subject",
+subject
+);
 
 window.location.href="result.html";
 
